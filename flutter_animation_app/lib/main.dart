@@ -1,64 +1,108 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/animation.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(LogoApp());
 
-class MyApp extends StatelessWidget {
+class LogoApp extends StatefulWidget {
+  _LogoAppState createState() => _LogoAppState();
+}
+
+class _LogoAppState
+    extends State<LogoApp>
+    with SingleTickerProviderStateMixin {
+
+  Animation<double> animation;
+  AnimationController controller;
+
+  @override initState() {
+    super.initState();
+    controller = AnimationController(duration: const Duration(seconds: 2), vsync: this);
+//    animation = Tween<double>(begin: 0, end: 300).animate(controller)
+//    ..addListener(() {
+//      setState(() {
+//
+//      });
+//    });
+
+    animation = Tween<double>(begin: 0, end: 300).animate(controller)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          controller.forward();
+        }
+      })
+      ..addStatusListener((state) => print('$state'));
+
+    controller.forward();
+  }
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+//  Widget build(BuildContext context) {
+//    return Center(
+//      child: Container(
+//        margin: EdgeInsets.symmetric(vertical: 10),
+//        height: animation.value,
+//        width: animation.value,
+//        child: FlutterLogo(),
+//      ),
+//    );
+//  }
+//  Widget build(BuildContext context) => AnimatedLogo(animation: animation);
+  Widget build(BuildContext context) => GrowTransition(
+      child: LogoWidget(),
+      animation: animation,
     );
+
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class AnimatedLogo extends AnimatedWidget {
 
-  final String title;
+  AnimatedLogo({Key key, Animation<double> animation})
+    :super(key: key, listenable: animation);
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
+    Widget build(BuildContext context) {
+      final animation = listenable as Animation<double>;
+      return Center(
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 10),
+          height: animation.value,
+          width: animation.value,
+          child: FlutterLogo()
+        )
+      );
+    }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class GrowTransition extends StatelessWidget {
+  GrowTransition({this.child, this.animation});
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  final Widget child;
+  final Animation<double> animation;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+  Widget build(BuildContext context) => Center(
+      child: AnimatedBuilder(
+        animation: animation,
+        builder: (context, child) => Container(
+          height: animation.value,
+          width: animation.value,
+          child: child,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ),
-    );
-  }
+        child: child,
+      )
+  );
+
+}
+
+class LogoWidget extends StatelessWidget {
+  Widget build(BuildContext context) => Container(
+    margin: EdgeInsets.symmetric(vertical: 10),
+    child: FlutterLogo(),
+  );
 }
