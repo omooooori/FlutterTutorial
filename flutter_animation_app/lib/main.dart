@@ -107,7 +107,7 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Container(
-                  height: 400,
+                  height: 450,
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage('assets/images/background.png'),
@@ -215,28 +215,23 @@ class LoginScreen extends StatelessWidget {
                           ],
                         ),
                       )),
-                      SizedBox(height: 30,),
-                      FadeAnimation(2, Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            gradient: LinearGradient(
-                                colors: [
-                                  Color.fromRGBO(143, 148, 251, 1),
-                                  Color.fromRGBO(143, 148, 251, .6),
-                                ]
-                            )
-                        ),
-                        child: Center(
-                          child: Text("Login", style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),),
-                        ),
-                      )),
-                      SizedBox(height: 70,),
-                      FadeAnimation(1.5, Text("Forgot Password?",
-                        style: TextStyle(
-                            color: Color.fromRGBO(143, 148, 251, 1)),)),
+                    ButtonTheme(
+                      minWidth: 400.0,
+                      height: 50.0,
+                      child: RaisedButton(
+                          child: Text("Login"),
+                          color: Colors.white,
+                          shape: StadiumBorder(
+                            side: BorderSide(color: Colors.green),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(_createRoute());
+                          },
+                      )
+                    ),
+                    FadeAnimation(1.5, Text("Forgot Password?",
+                      style: TextStyle(
+                      color: Color.fromRGBO(143, 148, 251, 1)),)),
                     ],
                   ),
                 )
@@ -244,6 +239,87 @@ class LoginScreen extends StatelessWidget {
             ),
           ),
         )
+    );
+  }
+
+  Route _createRoute() {
+    return PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => AnimationListScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          var begin = Offset(0.0, 1.0);
+          var end = Offset.zero;
+          var curve = Curves.ease;
+
+          var tween = Tween(begin: begin, end: end);
+          var curvedAnimation = CurvedAnimation(
+            parent: animation,
+            curve: curve,
+          );
+
+          return SlideTransition(
+            position: tween.animate(curvedAnimation),
+            child: child,
+          );
+        }
+    );
+  }
+}
+
+class AnimationListScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+        appBar: new AppBar(
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: new Text("Animation List Screen"),
+        ),
+        body: ListView(
+          children: <Widget>[
+            ListTile(
+              title: Text("Easing animation"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute());
+              },
+            ),
+            ListTile(
+              title: Text("Offset & Delay animation"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute());
+              },
+            ),
+            ListTile(
+              title: Text("Parenting animation"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute());
+              },
+            ),
+            ListTile(
+              title: Text("Transformation animation"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute());
+              },
+            ),
+            ListTile(
+              title: Text("Value Change animation"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute());
+              },
+            ),
+            ListTile(
+              title: Text("Masking animation"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute());
+              },
+            ),
+            ListTile(
+              title: Text("Physics animation"),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute());
+              },
+            )
+          ],
+        ) // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
