@@ -50,9 +50,9 @@ class _LogoAppState
 //  }
 //  Widget build(BuildContext context) => AnimatedLogo(animation: animation);
   Widget build(BuildContext context) => GrowTransition(
-      child: LogoWidget(),
-      animation: animation,
-    );
+    child: LogoWidget(),
+    animation: animation,
+  );
 
 
   @override
@@ -62,22 +62,11 @@ class _LogoAppState
   }
 }
 
-class AnimatedLogo extends AnimatedWidget {
-
-  AnimatedLogo({Key key, Animation<double> animation})
-    :super(key: key, listenable: animation);
-
-    Widget build(BuildContext context) {
-      final animation = listenable as Animation<double>;
-      return Center(
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 10),
-          height: animation.value,
-          width: animation.value,
-          child: FlutterLogo()
-        )
-      );
-    }
+class LogoWidget extends StatelessWidget {
+  Widget build(BuildContext context) => Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: FlutterLogo()
+    );
 }
 
 class GrowTransition extends StatelessWidget {
@@ -87,22 +76,13 @@ class GrowTransition extends StatelessWidget {
   final Animation<double> animation;
 
   Widget build(BuildContext context) => Center(
-      child: AnimatedBuilder(
+    child: AnimatedBuilder(
         animation: animation,
         builder: (context, child) => Container(
           height: animation.value,
           width: animation.value,
           child: child,
         ),
-        child: child,
-      )
-  );
-
-}
-
-class LogoWidget extends StatelessWidget {
-  Widget build(BuildContext context) => Container(
-    margin: EdgeInsets.symmetric(vertical: 10),
-    child: FlutterLogo(),
+        child: child),
   );
 }
